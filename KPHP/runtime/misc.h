@@ -53,7 +53,7 @@ void f$var_dump (const var &v);
 
 
 /** For local usage only **/
-int f$system (const string &query);
+string f$system (const string &query);
 
 int f$clog(const string &query);
 

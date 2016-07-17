@@ -994,9 +994,28 @@ void f$var_dump (const var &v) {
 }
 
 
-int f$system (const string &query) {
-  return system (query.c_str());
+string f$system (const string &query) {
+	char buffer[128];
+    std::string result = "";
+    FILE* pipe = popen(query.c_str(), "r");
+    
+	string str;
+
+	while (!feof(pipe)) {
+		if (fgets(buffer, 128, pipe) != NULL) {
+			char *ptr = buffer;
+			int ptr_size = strlen(ptr);
+
+			for (int i = 0; i < ptr_size; i++) {
+				str.push_back(ptr[i]);
+			}
+		}	
+	}
+    
+    pclose(pipe);
+    return str;
 }
+
 
 int f$clog (const string &query) {
 	std::cout << query.c_str() << std::endl;
