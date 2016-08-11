@@ -1,14 +1,37 @@
-This is VK/KittenPHP-DB-Engine project, consisting of efficient PHP-to-C++ translator called "KPHP" or "KittenPHP", and several auxiliary high-performance "engines" (specialized non-relational databases), needed for its deployment.
+sudo apt-get update
+sudo apt-get install git-core openssl zlib1g-dev libcg libpcre3-dev libssl-dev build-essential libcurl4-openssl-dev
 
-It has been developed since 2009 mostly by Vkontakte Ltd, operator of social network VK.COM, and thoroughfully tested in high-performance enviroments, until a version useful for the general public was obtained. Fulfilling several previously given public promises, this version is now released for public use under GPL/LGPL terms.
+wget re2.googlecode.com/files/re2-20140304.tgz
+tar -zxvf re2-20140304.tgz
+cd re2/
+make
+make install
 
-Source code is licensed mostly under GPL version 2 or later (see file LICENSE for the full text and file GPLv2 for list of all authors).
+cd /usr/local/src/
+git clone https://github.com/dimkus/kphp-kdb
+cd /usr/local/src/kphp-kdb/
+make kphp
+make all
 
-Some portions are licensed under LGPL version 2 or later (see file LICENSE.LGPL for the full text and file LGPLv2 for list of all authors). These are the files which might be later used to create a library, useful for all engines as well as any other future third-party projects.
+mkdir /var/lib/engine
+sudo useradd kitten -b /var/lib/engine -u 239
+chown -R kitten:kitten /var/lib/engine/
 
-Each source file should have a header describing its license (GPL or LGPL) and precise list of contributors. If no such header is present, GPLv2 (or later) is assumed, as described in files GPLv2 and LICENSE.
+mkdir /usr/share/engine/
+mkdir /usr/share/engine/bin/
+mkdir /var/log/engine/
+mkdir /etc/engine
 
-Russian-language documentation is available at [[docs/ru/]].
-English documentation not available yet, sorry.
+cp /usr/local/src/kphp-kdb/objs/bin/* /usr/share/engine/bin/
+cp /usr/local/src/kphp-kdb/scripts/debian-init.d-engine /etc/init.d/engine
+cp /usr/local/src/kphp-kdb/scripts/_etc_logrotate.d_engine /etc/logrotate.d/engine
+cp /usr/local/src/kphp-kdb/scripts/start-engine /usr/share/engine/bin/
 
-Group discussion [https://vk.com/kitphp]
+logrotate -d /etc/logrotate.d/engine
+logrotate -v -f /etc/logrotate.d/engine
+
+
+export KPHP_PATH=/usr/local/src/kphp-kdb
+
+for example:
+python /usr/local/src/kphp-kdb/KPHP/tests/kphp.py bench.php -o bench
