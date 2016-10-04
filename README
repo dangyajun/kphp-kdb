@@ -1,15 +1,14 @@
 sudo apt-get update
 sudo apt-get install git-core openssl zlib1g-dev libcg libpcre3-dev libssl-dev build-essential libcurl4-openssl-dev
 
-wget re2.googlecode.com/files/re2-20140304.tgz
+cd /usr/local/src/
+git clone https://github.com/dimkus/kphp-kdb
+cd /usr/local/src/kphp-kdb/re/
 tar -zxvf re2-20140304.tgz
 cd re2/
 make
 make install
-
-cd /usr/local/src/
-git clone https://github.com/dimkus/kphp-kdb
-cd /usr/local/src/kphp-kdb/
+cd ../../
 make kphp
 make all
 
