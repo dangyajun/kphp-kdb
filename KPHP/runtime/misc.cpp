@@ -1078,16 +1078,21 @@ string f$fsock_read(int &sockfd) {
 	char buffer[256];
 	string str;
 	do {
+	
 		bzero(buffer, 256);
 		n = read(sockfd, buffer, 255);
-		
 		char *ptr = buffer;
 		int ptr_size = strlen(ptr);
-
+		
 		for (int i = 0; i < ptr_size; i++) {
+			if (i == ptr_size -1 && (int) ptr[i] == 10) {
+				n = 0;
+			}
 			str.push_back(ptr[i]);
 		}
-	} while(n == 255);
+	} while(n == 255 && n > 0);
 	
+
 	return str;
 }
+
